@@ -47,6 +47,7 @@ if not os.path.exists('Aff_lead.csv'):
 	item=['单价','转化时间','国家','类型','offerID','A/M']
 	writer.writerow(item)
 
+writer = csv.writer(csvfile,dialect='excel')
 while True:
 	time.sleep(3)
 	web_data=driver.page_source		# 获取网页文件对象 
@@ -55,12 +56,20 @@ while True:
 	#获取这个页面需要的信息
 	rows = soup.find_all('div', class_='newConversion')
 	for row in rows:
-		writer = csv.writer(csvfile,dialect='excel')
-		writer.writerow(list(row.stripped_strings))
+		result = list(row.stripped_strings)
+		for x in row.contents:
+			try:
+				#print(x.attrs)
+				if len(x.attrs['class']) > 1:
+					if len(x.attrs['class'][1]) > 1:
+						result.append(x.attrs['class'][1])
+			except Exception as e:
+				pass
+		writer.writerow(result)
 		print("写入成功：", end=' ')
-		print(list(row.stripped_strings))
+		print(result)
 
 driver.quit()
 csvfile.close()
 
-print ("爬虫完成")
+print ("完成")
