@@ -14,8 +14,8 @@ driver.get(r'https://app.afflow.rocks/')# 打开网页
 time.sleep(5)
 inputUsername = driver.find_element_by_xpath (r'//*[@id="username"]')
 inputPassword = driver.find_element_by_xpath (r'//*[@id="password"]')
-inputUsername.send_keys(r"linuxmintnot@gmail.com")
-inputPassword.send_keys(r"3n7s9XkpCa")
+inputUsername.send_keys(r"你的帐号")
+inputPassword.send_keys(r"你的密码")
 # 提交 
 submitElement = driver.find_element_by_xpath (r'//*[@id="keyEntryContainer"]/div/div/div[3]/input')
 submitElement.click()
