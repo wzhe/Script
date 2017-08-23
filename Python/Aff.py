@@ -4,6 +4,7 @@ import sys
 import time
 import csv
 import os
+import copy
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8') #改变标准输出的默认编码 
 
@@ -19,11 +20,11 @@ driver=webdriver.Chrome()
 
 driver.get(r'https://app.afflow.rocks/')# 打开网页 
 # 定位到输入框并输入
-time.sleep(3)
+time.sleep(5)
 inputUsername = driver.find_element_by_xpath (r'//*[@id="username"]')
 inputPassword = driver.find_element_by_xpath (r'//*[@id="password"]')
-inputUsername.send_keys(r"")
-inputPassword.send_keys(r"")
+inputUsername.send_keys(r"用户名")
+inputPassword.send_keys(r"密码")
 # 提交 
 submitElement = driver.find_element_by_xpath (r'//*[@id="keyEntryContainer"]/div/div/div[3]/input')
 submitElement.click()
@@ -58,9 +59,9 @@ last = parser.parse('Aug 22nd, 22:56')
 
 while True:
     time.sleep(3)
-    print("-------now[%s]-------last[%s]-------",now,last)
+    print("-------now[", now, "]-------last[", last, "]-------")
     First = True 
-    last = now
+    last = copy.deepcopy(now)
     web_data=driver.page_source     # 获取网页文件对象 
     #print (web_data)
     soup=BeautifulSoup(web_data,'lxml')# 解析网页 
@@ -76,18 +77,21 @@ while True:
             except Exception as e:
                 pass
 
-        if(len(result) != 7):
+        if(len(result) != 7):#跳过自己的转化
             continue 
         if First:
             now = parser.parse(result[1])
             First = False
         if now == parser.parse(result[1]):
             continue
-        if parser.parse(result[1]) > last:
+        if parser.parse(result[1]) >= last:
             writer.writerow(result)
             print("写入成功：", end=' ')
             print(result)
-    
+        else:
+            print("已经写入过了：[", parser.parse(result[1]),"],----last[", last,"]")
+            break
+
 driver.quit()
 csvfile.close()
 

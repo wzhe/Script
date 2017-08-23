@@ -1,0 +1,1 @@
+awk -F, '{print $5}' Aff_lead.csv | sort | uniq -c | sort
