@@ -1,4 +1,8 @@
-for link in links:
-    if link['href'].endswith('8.bin'):
-        file_links=image_url + link['href']
-        
+from dateutil import parser
+now = parser.parse('Aug 22nd, 22:56')
+print(now)
+last = parser.parse('Aug 22nd, 22:56')
+print(last)
+if last == now:
+    print('OK')
+
