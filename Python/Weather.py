@@ -79,9 +79,10 @@ def get_weather():
     aqi = 'aqi' + aqi
     info = info.replace('，', ',')
     # 获取今天的日期
-    today = datetime.now().date().strftime('%Y年%m月%d日')
+    #today = datetime.now().date().strftime('%Y年%m月%d日')
+    today = datetime.now().strftime('%Y年%m月%d日%H点%M分,一年中的第%j天')
     # 将获取的信息拼接成一句话
-    text = '早上好！今天是%s,天气%s,温度%s摄氏度,%s,%s,%s,%s' % \
+    text = '叮叮叮！现在是%s,天气%s,温度%s摄氏度,%s,%s,%s,%s' % \
            (today, weather, temp, sd, wind, aqi, info)
     return text
 
@@ -97,10 +98,6 @@ def main():
     # 获取需要转换语音的文字
     text = get_weather()
     print(text)
-    # 获取音乐文件绝对地址
-    mp3path2 = os.path.join(os.path.dirname(__file__), '2.mp3')
-    # 先播放一首音乐做闹钟
-    os.system('mplayer %s' % mp3path2)
     # 播报语音天气
     text2voice(text)
 

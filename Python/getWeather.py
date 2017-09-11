@@ -91,8 +91,7 @@ def get_weather():
     aqi = 'aqi' + aqi
     info = info.replace('，', ',')
     # 获取今天的日期
-    today ="12月"
-    #	datetime.now().date().strftime('%y年%m月%d日')
+    today = datetime.now().strftime('%Y年%m月%d日%H点%M分,一年中的第%j天')
     # 将获取的信息拼接成一句话
     text = '早上好！今天是%s,天气%s,温度%s摄氏度,%s,%s,%s,%s \n' % \
            (today, weather, temp, sd, wind, aqi, info)
