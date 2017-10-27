@@ -1,0 +1,15 @@
+blk5008l
+blk5016b-s
+blk5016t-s
+blk5018a-s
+hbd 5009d-e
+hbd 5506d-e
+mbd5004d-eh
+mbd5016e-s
+mbd5016h-s
+mbd5032d-b
+mbd5032e
+mbd5504t-b
+mbd5508t-b
+mvb5504e-e
+nbd5504t-fe

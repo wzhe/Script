@@ -44,7 +44,8 @@ def open_url(url):
     proxy_ip = "http://" + ip[0] + ":" + str(ip[1])
     print proxy_ip
     global request_headers
-    
+
+
     proxy_support = urllib2.ProxyHandler({'http':proxy_ip})
     opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
     urllib2.install_opener(opener)

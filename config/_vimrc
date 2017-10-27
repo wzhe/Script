@@ -1,0 +1,671 @@
+" -----------------   Author: Ruchee
+" -----------------    Email: my@ruchee.com
+" -----------------  WebSite: http://www.ruchee.com
+" -----------------     Date: 2013-05-23 09:12
+" -----------------           For All Platforms
+"
+source $VIMRUNTIME/vimrc_example.vim
+source $VIMRUNTIME/mswin.vim
+behave mswin
+
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &sh =~ '\<cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+endfunction
+
+
+" 设置头文件路径，以及tags路径，用于代码补全
+"if has("win32")
+    " For Company
+    " set tags+=D:/Ruchee/workspace/common/tags
+    " set tags+=D:/Ruchee/workspace/www.qycn.com/tags
+    " set tags+=D:/Ruchee/workspace/admin.qycn.com/tags
+    " set tags+=D:/Ruchee/workspace/pay.qycn.com/tags
+    " set tags+=D:/Ruchee/workspace/uion.qycn.com/trunk/tags
+    " set tags+=D:/Ruchee/workspace/cc.qy.cn/html/tags
+
+    " For Self
+    " set tags+=G:/Files/www/libs/Smarty/tags
+    " set tags+=G:/Files/www/libs/Zend/tags
+"else
+    " set tags+=~/www/libs/Smarty/tags
+    " set tags+=~/www/libs/Zend/tags
+
+    " set path+=/usr/include/linux
+    " set path+=/usr/include/c++/4.8
+"endif
+
+
+" ======= 本配置文件使用指南 ======= "
+
+" Windows下需要的软件：gvim、ctags
+" Linux下需要的包文件：vim-gnome、ctags、wmctrl
+"
+" 如遇文件格式问题，请转到vimfiles目录执行这条命令进行格式转换：find . -type f | xargs dos2unix
+" tags文件可用这条命令生成，以C/C++为例：ctags -R --languages=c,c++
+"
+" 注意：Linux下必须使用GUI界面，否则Alt系按键将失效，可在.bashrc文件里面写入以下一行
+" alias vim='gvim'
+"
+" 可使用下面两条命令使`Linux`和`Windows`共用同一套配置
+" ln -s /your/path/for/gvim/vimfiles ~/.vim
+" ln -s /your/path/for/gvim/_vimrc ~/.vimrc
+
+" ================================== "
+
+
+" Ctrl + H                   --光标移当前行行首       [插入模式]
+" Ctrl + J                   --光标移下一行行首       [插入模式]
+" Ctrl + K                   --光标移上一行行尾       [插入模式]
+" Ctrl + L                   --光标移当前行行尾       [插入模式]
+
+" Alt  + H                   --光标左移一格           [插入模式]
+" Alt  + J                   --光标下移一格           [插入模式]
+" Alt  + K                   --光标上移一格           [插入模式]
+" Alt  + L                   --光标右移一格           [插入模式]
+
+" Alt  + I                   --设置代码缩进策略       [全模式可用]
+" Ctr  + E                   --一步加载语法模板       [全模式可用]
+" Alt  + C                   --单源文件编译           [全模式可用]
+" Alt  + R                   --单源文件运行           [全模式可用]
+
+" Ctrl + ]                   --转到函数定义
+" Ctrl + T                   --返回调用函数
+
+" <C-P>                      --关键字补全
+" Tab键                      --插入模式下语法结构补全 [snipMate插件]
+" Shift + Insert             --向Vim中粘贴从别处复制的内容
+
+" u [小写]                   --单步复原               [非插入模式]
+" U [大写]                   --整行复原               [非插入模式]
+" Ctrl + R                   --撤消“撤消”操作         [非插入模式]
+
+" nt                         --打开NERDTree           [非插入模式]
+" tl                         --打开TagList            [非插入模式]
+
+" za                         --打开或关闭当前折叠
+" zM                         --关闭所有折叠
+" zR                         --打开所有折叠
+
+" %                          --在匹配的括号间跳跃
+" dw de d^ d$ dd             --删除
+" cw ce c^ c$ cc             --删除并进入插入模式
+" yw ye y^ y$ yy             --复制
+
+" ==                         --缩进当前行
+" =G                         --缩进直到文件结尾
+" gg=G                       --缩进整个文件
+" bb                         --按=号对齐代码
+" bn                         --自定义对齐
+
+" :%!xxd                     --转储二进制文件，以十六进制形式显示
+" :%!xxd -r                  --还原二进制文件
+" :r 文件名 或 :r !命令      --插入外部文件或命令行执行结果到当前位置
+
+" :se ft=cpp                 --手动选择语法高亮       [:set filetype=cpp 或 :set syntax=cpp 亦可]
+
+" ---------- 主要插件详细用法说明 ---------------------
+
+" :Tlist                     --呼出变量和函数列表     [TagList插件]
+" :LoadTemplate              --呼出语法模板           [Load_Template插件]
+" :AuthorInfoDetect          --添加作者、时间等信息   [NERD_commenter && authorinfo插件]
+" :Tab /对齐字符             --代码对齐               [Tabular插件]
+" \ig                        --显示对齐线             [Indent_guides插件]
+
+" ---------- snipMate [全局可用的补全关键字] ----------
+"
+" cprt                       --插入版权信息           [助记：copyright]
+" date                       --插入当前时间
+" fiok                       --插入文件的最后修改时间 [助记：file ok]
+" updt                       --插入更新时间           [助记：updated]
+" desc                       --插入文件描述           [助记：description]
+" 更多关键字可自行查看vimfiles/snippets下的各个文件   [Linux下为~/.vim/snippets]
+
+" ---------- NERDTree [智能文件浏览器] ----------------
+"
+" :NERDTree                  --启动NERDTree插件
+" o [小写]                   --切换当前文件或目录的打开、关闭状态
+" u                          --打开上层目录
+" p [小写]                   --返回上层目录
+" P [大写]                   --返回根目录
+" K                          --转到当前目录第一个节点
+" J                          --转到当前目录最后的节点
+" m                          --显示文件系统菜单       [增、删、移]
+" ?                          --弹出帮助菜单
+" q                          --退出该插件
+
+" ---------- Vimwiki [Vim中的wiki/blog系统] ----------------
+"
+" 链接：[[链接地址|链接描述]]
+" 图片：{{图片地址||属性1="属性值" 属性2="属性值"}}
+" 代码：{{{class="brush: cpp" 代码}}}
+
+
+" 设置颜色模式和字体
+if has("win32")
+    colorscheme desert
+    "colorscheme molokai
+    "colorscheme tango2
+    "colorscheme blackboard
+    "set guifont=Monaco:h11
+else
+    colorscheme  molokai
+    "colorscheme tango2
+    "colorscheme blackboard
+    "set guifont=Monaco\ 11
+endif
+
+set guifont=Courier_New:h10:cANSI   " 设置字体  
+
+
+" 设置缩进策略
+set shiftwidth=4             " 换行时行间交错使用的空格数量
+set cindent shiftwidth=4     " 自动缩进的空格数量
+set tabstop=4                " 设置Tab键的宽度
+set smarttab                  " 只按一下 Backspace就删除4个空格
+set backspace=2              " 设置退格键可用
+" 使回格键（backspace）正常处理indent, eol, start等
+set autoindent               " 自动对齐
+set ai!                      " 设置自动缩进
+set smartindent              " 智能自动缩进
+set nu!                      " 显示行号
+set mouse=a                  " 启用鼠标
+"set ruler                    " 右下角显示光标位置的状态行
+set incsearch                " 开启实时搜索功能
+set hlsearch                 " 开启高亮显示结果
+"set nowrapscan               " 搜索到文件两端时不重新搜索
+set nocompatible             " 关闭兼容模式
+set vb t_vb=                 " 关闭提示音 [会闪屏]
+set hidden                   " 允许在有未保存的修改时切换缓冲区
+set autochdir                " 设定文件浏览器目录为当前目录
+set foldmethod=syntax        " 选择代码折叠类型
+set foldlevel=10000            " 禁止自动折叠
+set laststatus=2             " 开启状态栏信息
+" 我的状态行显示的内容（包括文件类型和解码）
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [POS=%l,%v][%p%%]\ %{strftime(\"%d/%m/%y\ -\ %H:%M\")}
+"set statusline=[%F]%y%r%m%*%=[Line:%l/%L,Column:%c][%p%%]
+set statusline=[%F]\ %{&fileencoding}[FORMAT=%{&ff}]%y%r%m%*%=[POS=%l/%L,%c][%p%%]\ %{strftime(\"%m-%d\ -\ %H:%M:%S\")}   "设置状态信息
+set cmdheight=2              " 命令行的高度，默认为1，这里设为2
+set writebackup              " 设置无备份文件
+set nobackup
+set list                     " 显示Tab符，使用一高亮竖线代替
+set listchars=tab:\|\ ,
+set expandtab                " 将Tab自动转化成空格    [需要输入真正的Tab键时，使用 Ctrl+V + Tab]
+set showmatch               " 显示括号配对情况
+set cursorline              " 突出显示当前行
+"set nowrap                  " 设置不自动换行
+
+syntax enable                " 打开语法高亮
+syntax on                    " 开启文件类型侦测
+filetype indent on           " 针对不同的文件类型采用不同的缩进格式
+filetype plugin on           " 针对不同的文件类型加载对应的插件
+filetype plugin indent on    " 启用自动补全
+
+" quickfix模式
+autocmd FileType c,cpp map <buffer> <leader><space> :w<cr>:make<cr>
+"共享剪贴板  
+set clipboard+=unnamed 
+"make 运行
+:set makeprg=g++\ -Wall\ \ %
+"自动保存
+set autowrite
+set magic                   " 设置魔术
+set foldcolumn=0
+set foldmethod=indent 
+" 去掉输入错误的提示声音
+set noeb
+" 在处理未保存或只读文件的时候，弹出确认
+set confirm
+" 历史记录数
+set history=1000
+"禁止生成临时文件
+set noswapfile
+"搜索忽略大小写
+set ignorecase
+"行内替换
+"set gdefault
+" 保存全局变量
+set viminfo+=!
+" 带有如下符号的单词不要被换行分割
+set iskeyword+=_,$,@,%,#,-
+" 字符间插入的像素行数目
+set linespace=0
+" 增强模式中的命令行自动完成操作,但要求laststatus>=2
+set wildmenu
+" 允许backspace和光标键跨越行边界
+"set whichwrap+=<,>,h,l
+set selection=exclusive
+set selectmode=mouse,key
+" 通过使用: commands命令，告诉我们文件的哪一行被改变过
+set report=0
+" 在被分割的窗口间显示空白，便于阅读
+set fillchars=vert:\ ,stl:\ ,stlnc:\
+" 匹配括号高亮的时间（单位是十分之一秒）
+set matchtime=1
+" 光标移动到buffer的顶部和底部时保持3行距离
+set scrolloff=3
+" 高亮显示普通txt文件（需要txt.vim脚本）
+au BufRead,BufNewFile *  setfiletype txt
+
+" 设置编码
+set fenc=utf-8
+set encoding=utf-8
+set fileencodings=utf-8,gb2312,gb18030,gbk,ucs-bom,cp936,latin1
+"set fileencodings=ucs-bom,cp936,utf-8,utf-16,gbk,big5,gb18030,latin-1
+if has("win32")
+    source $VIMRUNTIME/delmenu.vim
+    source $VIMRUNTIME/menu.vim
+    language messages zh_CN.utf-8
+endif
+
+
+" 使用GUI界面时的设置
+if has("gui_running")
+    " 启动时自动最大化窗口
+    if has("win32")
+       au GUIEnter * simalt ~x
+    else
+       au GUIEnter * call MaximizeWindow()
+    endif
+    winpos 600 70          " 指定窗口出现的位置，坐标原点在屏幕左上角
+    set lines=27 columns=90 " 指定窗口大小，lines为高度，columns为宽度
+    "set guioptions-=m        " 隐藏菜单栏
+    set guioptions-=T        " 隐藏工具栏
+    "set guioptions-=L       " 隐藏左侧滚动条
+    "set guioptions-=r        " 隐藏右侧滚动条
+    "set guioptions-=b       " 隐藏底部滚动条
+    "set showtabline=0       " 隐藏Tab栏
+endif
+
+function! MaximizeWindow()
+    silent !wmctrl -r :ACTIVE: -b add,maximized_vert,maximized_horz
+endfunction
+
+
+" ======= 引号 && 括号自动匹配 ======= "
+"
+":inoremap ( ()<ESC>i
+
+":inoremap ) <c-r>=ClosePair(')')<CR>
+
+":inoremap { {}<ESC>i
+
+":inoremap } <c-r>=ClosePair('}')<CR>
+
+":inoremap [ []<ESC>i
+
+":inoremap ] <c-r>=ClosePair(']')<CR>
+
+":inoremap " ""<ESC>i
+
+":inoremap ' ''<ESC>i
+
+":inoremap ` ``<ESC>i
+
+function ClosePair(char)
+    if getline('.')[col('.') - 1] == a:char
+        return "\<Right>"
+    else
+        return a:char
+    endif
+endf
+
+
+func! IndentCode()
+    if &filetype == "scheme" || &filetype == "lisp"
+        set shiftwidth=2
+        set cindent shiftwidth=2
+        set tabstop=2
+    else
+        set shiftwidth=4
+        set cindent shiftwidth=4
+        set tabstop=4
+    endif
+endfunc
+
+" Alt + I             根据不同的编程语言设置不同的缩进策略
+map  <m-i> :call IndentCode()<CR>
+imap <m-i> <ESC>:call IndentCode()<CR>
+vmap <m-i> <ESC>:call IndentCode()<CR>
+
+
+" MiniBufExplorer     多个文件切换 可使用鼠标双击相应文件名进行切换
+let g:miniBufExplMapWindowNavVim=1
+let g:miniBufExplMapWindowNavArrows=1
+let g:miniBufExplMapCTabSwitchBufs=1
+let g:miniBufExplModSelTarget=1
+
+" :Tlist              调用TagList
+let Tlist_Show_One_File=1                    " 只显示当前文件的tags
+let Tlist_Exit_OnlyWindow=1                  " 如果Taglist窗口是最后一个窗口则退出Vim
+let Tlist_Use_Right_Window=1                 " 在右侧窗口中显示
+let Tlist_File_Fold_Auto_Close=1             " 自动折叠
+
+" :LoadTemplate       根据文件后缀自动加载模板
+if has("win32")
+    " need change to your self path
+    let g:template_path='C:/Program Files/Vim/vimfiles/template'
+else
+    let g:template_path='~/.vim/template/'
+endif
+
+" snipMate            Tab智能补全
+let g:snips_author='Ruchee'
+
+" :AuthorInfoDetect   自动添加作者、时间等信息，本质是NERD_commenter && authorinfo的结合
+let g:vimrc_author='wzhe'
+let g:vimrc_email='ahuwang@163.com'
+"let g:vimrc_homepage='http://www.ruchee.com'
+
+" Indent_guides       显示对齐线
+let g:indent_guides_enable_on_vim_startup=0
+let g:indent_guides_guide_size=1
+let g:indent_guides_enable_on_vim_startup=1
+
+
+" ======= 自定义快捷键 ======= "
+
+" Ctrl + H            光标移当前行行首
+imap <c-h> <ESC>I
+
+" Ctrl + J            光标移下一行行首
+imap <c-j> <ESC><Down>I
+
+" Ctrl + K            光标移上一行行尾
+imap <c-k> <ESC><Up>A
+
+" Ctrl + L            光标移当前行行尾
+imap <c-L> <ESC>A
+
+" Alt  + H            光标左移一格
+imap <m-h> <Left>
+
+" Alt  + J            光标下移一格
+imap <m-j> <Down>
+
+" Alt  + K            光标上移一格
+imap <m-k> <Up>
+
+" Alt  + L            光标右移一格
+imap <m-l> <Right>
+
+" Ctrl + E            一步加载语法模板
+map  <c-e> :call IndentCode()<CR><ESC>:LoadTemplate<CR><ESC>:AuthorInfoDetect<CR><ESC>Gi
+imap <c-e> <ESC>:call IndentCode()<CR><ESC>:LoadTemplate<CR><ESC>:AuthorInfoDetect<CR><ESC>Gi
+vmap <c-e> <ESC>:call IndentCode()<CR><ESC>:LoadTemplate<CR><ESC>:AuthorInfoDetect<CR><ESC>Gi
+
+" bb                  按=号对齐代码
+map bb :Tab /=<CR>
+
+" bn                  自定义对齐
+map bn :Tab /
+
+" nt                  打开NERDTree窗口，在左侧栏显示  [非插入模式]
+map nt :NERDTree<CR>
+
+" tl                  打开Taglist窗口，在右侧栏显示   [非插入模式]
+map tl :Tlist<CR><c-l>
+
+
+" ======= 模板 && 编译 && 运行 ======= "
+
+" 编译源文件
+func! CompileCode()
+    exec "w"
+    if &filetype == "c"
+        exec "!gcc -Wall -std=c11 -o %:r %:t"
+    elseif &filetype == "cpp"
+        exec "!g++ -Wall -std=c++11 -o %:r %:t"
+    elseif &filetype == "php"
+        exec "!php %:t"
+    elseif &filetype == "python"
+        exec "!python %:t"
+    elseif &filetype == "sh"
+        exec "!bash %:t"
+    endif
+endfunc
+
+" 运行可执行文件
+func! RunCode()
+    exec "w"
+    if &filetype == "c" || &filetype == "cpp"
+        if has("win32")
+            exec "AsyncRun %:r.exe"
+        else
+            exec "AsyncRun ./%:r"
+        endif
+    elseif &filetype == "php"
+        exec "!php %:t"
+    elseif &filetype == "python"
+        exec "AsyncRun python %:t"
+    elseif &filetype == "sh"
+        exec "!bash %:t"
+    endif
+endfunc
+
+" Alt + C     一键保存、编译
+map  <m-c> :call CompileCode()<CR>
+imap <m-c> <ESC>:call CompileCode()<CR>
+vmap <m-c> <ESC>:call CompileCode()<CR>
+
+" Alt + R     一键保存、运行
+map  <m-r> :call RunCode()<CR>
+imap <m-r> <ESC>:call RunCode()<CR>
+vmap <m-r> <ESC>:call RunCode()<CR>
+
+
+" ======= VimWiki ======= "
+
+" 设置编码
+let g:vimwiki_w32_dir_enc = 'utf-8'
+
+" 使用鼠标映射
+let g:vimwiki_use_mouse = 1
+
+" 声明可以在wiki里面使用的HTML标签
+let g:vimwiki_valid_html_tags = 'a,b,i,s,u,sub,sup,kbd,br,hr,div,del,code,red,center,left,right,h1,h2,h3,h4,h5,h6,pre,script,style,meter,progress,form,fieldset,legend,input'
+
+let blog = {}
+
+if has("win32")
+    let blog.path          = 'D:/vim/mysite/wiki/'
+    let blog.path_html     = 'D:/vim/mysite/html/'
+    let blog.template_path = 'D:/vim/mysite/templates/'
+else
+    let blog.path          = '~/mysite/wiki/'
+    let blog.path_html     = '~/mysite/html/'
+    let blog.template_path = '~/mysite/templates/'
+endif
+
+let blog.template_default  = 'site'
+let blog.template_ext      = '.html'
+let blog.auto_export       = 1
+
+let g:vimwiki_list = [blog]"
+
+
+
+
+
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"autocmd InsertLeave * se nocul  " 用浅色高亮当前行  
+"autocmd InsertEnter * se cul    " 用浅色高亮当前行  
+"set showcmd         " 输入的命令显示出来，看的清楚些  
+"set foldenable      " 允许折叠  
+"set foldmethod=manual   " 手动折叠  
+"set background=dark "背景使用黑色 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""新文件标题
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"新建.c,.h,.sh,.java文件，自动插入文件头 
+autocmd BufNewFile *.cpp,*.[ch],*.sh,*.java exec ":call SetTitle()" 
+""定义函数SetTitle，自动插入文件头 
+func SetTitle() 
+	"如果文件类型为.sh文件 
+	if &filetype == 'sh' 
+		call setline(1,"\#########################################################################") 
+		call append(line("."), "\# File Name: ".expand("%")) 
+		call append(line(".")+1, "\# Author: wzhe") 
+		call append(line(".")+2, "\# mail: ahuwang@163.com") 
+		call append(line(".")+3, "\# Created Time: ".strftime("%c")) 
+		call append(line(".")+4, "\#########################################################################") 
+		call append(line(".")+5, "\#!/bin/bash") 
+		call append(line(".")+6, "") 
+	else 
+		call setline(1, "/*************************************************************************") 
+		call append(line("."), "	> File Name: ".expand("%")) 
+		call append(line(".")+1, "	> Author: wzhe") 
+		call append(line(".")+2, "	> Mail: ahuwang@163.com ") 
+		call append(line(".")+3, "	> Created Time: ".strftime("%c")) 
+		call append(line(".")+4, " ************************************************************************/") 
+		call append(line(".")+5, "")
+	endif
+	if &filetype == 'cpp'
+		call append(line(".")+6, "#include<iostream>")
+		call append(line(".")+7, "using namespace std;")
+		call append(line(".")+8, "")
+	endif
+	if &filetype == 'c'
+		call append(line(".")+6, "#include<stdio.h>")
+		call append(line(".")+7, "")
+	endif
+	"	if &filetype == 'java'
+	"		call append(line(".")+6,"public class ".expand("%"))
+	"		call append(line(".")+7,"")
+	"	endif
+	"新建文件后，自动定位到文件末尾
+	autocmd BufNewFile * normal G
+endfunc 
+autocmd BufNewFile *.cmd,*.bat exec ":call SetEncode()"
+""定义函数SetEncode,默认将bat文件保存为cp936格式
+func SetEncode()
+		call setline(1, "/*************************************************************************") 
+    if &filetype == "cmd" || &filetype == "bat"
+        if has("win32")
+            set fileencoding=cp936
+        endif
+    endif
+endfunc
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"键盘命令
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+nmap <leader>w :w!<cr>
+nmap <leader>f :find<cr>
+
+" 映射全选+复制 ctrl+a
+map <C-A> ggVGY
+map! <C-A> <Esc>ggVGY
+map <F12> gg=G
+" 选中状态下 Ctrl+c 复制
+vmap <C-c> "+y
+"去空行  
+nnoremap <F2> :g/^\s*$/d<CR> 
+"比较文件  
+nnoremap <C-F2> :vert diffsplit 
+"新建标签  
+map <M-F2> :tabnew<CR>  
+"列出当前目录文件  
+map <F3> :tabnew .<CR>  
+"打开树状文件目录  
+map <C-F3> \be  
+"C,C++的调试
+map <F8> :call Rungdb()<CR>
+func! Rungdb()
+	exec "w"
+	exec "!g++ % -g -o %<"
+	exec "!gdb ./%<"
+endfunc
+
+
+"自动补全
+:inoremap ( ()<ESC>i
+:inoremap ) <c-r>=ClosePair(')')<CR>
+":inoremap { {<CR>}<ESC>O
+":inoremap } <c-r>=ClosePair('}')<CR>
+":inoremap [ []<ESC>i
+":inoremap ] <c-r>=ClosePair(']')<CR>
+":inoremap " ""<ESC>i
+":inoremap ' ''<ESC>i
+"function! ClosePair(char)
+"	if getline('.')[col('.') - 1] == a:char
+"		return "\<Right>"
+"	else
+"		return a:char
+"	endif
+"endfunction
+map <F9> :call SaveInputData()<CR>
+func! SaveInputData()
+	exec "tabnew"
+	exec 'normal "+gP'
+	exec "w! /tmp/input_data"
+endfunc
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+
+"NERDtee设定
+let NERDChristmasTree=1
+let NERDTreeAutoCenter=1
+let NERDTreeBookmarksFile=$VIM.'\Data\NerdBookmarks.txt'
+let NERDTreeMouseMode=2
+let NERDTreeShowBookmarks=1
+let NERDTreeShowFiles=1
+let NERDTreeShowHidden=1
+let NERDTreeShowLineNumbers=1
+let NERDTreeWinPos='left'
+let NERDTreeWinSize=31
+nnoremap f :NERDTreeToggle
+map <F7> :NERDTree<CR>  
+
+"===========================================================================================================================
+
+"set shell =C:/cygwin64/bin/bash.exe
+"set shellquote=
+"set shellslash
+"set shellxquote=
+"set shellpipe=2>&1\|tee
+"set shellredir=>%s\ 2>&1
+
+"设置AsyncRun运行时自动打开Quickfix
+augroup Mygrop
+    autocmd User AsyncRunStart call asyncrun#quickfix_toggle(8, 1)
+augroup end
+
+"显示竖线
+"set cursorcolum 简写如下
+set cuc
+
+"colorscheme torte
+"colorscheme murphy
+"colorscheme desert 
+colorscheme monokai
+
+"colorscheme elflord
+"colorscheme ron
+
+"set undodir=D:/vimundodir
+
+set undodir=($VIM)/vimundodir
