@@ -7,25 +7,15 @@
 
 
 import sys
+import os
 
-if len(sys.argv) != 3:
-    print ("useage:\n    python read.py " + "some world + audiofilename(without mp3)")
-    print ("for example:\n    python read.py \"Hello World\" He")
+if len(sys.argv) != 2:
+    print ("useage:\n    python read.py " + "some world")
+    print ("for example:\n    python read.py Hello World" )
     exit()
 
-import requests
-
 text = sys.argv[1]
-audoFileName = sys.argv[2]+".mp3"
-
-headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit'
-                      '/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safar'
-                      'i/537.36',
-    }
-    
 url = 'http://tts.baidu.com/text2audio?idx=1&tex={0}&cuid=baidu_speech_' \
-      'demo&cod=2&lan=zh&ctp=1&pdt=1&spd=4&per=4&vol=5&pit=5'.format(text)
-res = requests.get(url, headers=headers)
-with open(audoFileName, 'wb') as f:
-    f.write(res.content)
+          'demo&cod=2&lan=zh&ctp=1&pdt=1&spd=4&per=4&vol=5&pit=5'.format(text)
+# 直接播放语音
+os.system('mplayer "%s"' % url)
