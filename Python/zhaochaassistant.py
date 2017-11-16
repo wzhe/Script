@@ -1,11 +1,10 @@
-#!Python
-#coding=gbk
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 __version__ = "$Id$"
 
-# ÖÐÎÄ×¢ÊÍ
+# ä¸­æ–‡æ³¨é‡Š
 import sys
-reload(sys)
-sys.setdefaultencoding("gbk")
+#sys.setdefaultencoding("utf-8")
 
 import os
 import time
@@ -19,108 +18,108 @@ import win32gui
 import win32api
 import win32con
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
 
 import resources
 
 class ZhaoChaFrame(QWidget):
-    game_hwnd = 0           # ÓÎÏ·µÄ´°Ìå¾ä±ú
+    game_hwnd = 0           # æ¸¸æˆçš„çª—ä½“å¥æŸ„
     bgpixmap = None
     pixmap = None
     my_visible = False
 
     GAME_CLASS = "#32770"
-    GAME_TITLE = "´ó¼ÒÀ´ÕÒ²ç"
+    GAME_TITLE = "å¤§å®¶æ¥æ‰¾èŒ¬"
 
-    WIDTH = 500             # ´óÍ¼¿í
-    HEIGHT = 450            # ´óÍ¼¸ß
-    ANCHOR_LEFT_X = 8       # ×óÍ¼XÆðµã
-    ANCHOR_RIGHT_X = 517    # ÓÒÍ¼XÆðµã
-    ANCHOR_Y = 190          # YÆðµã
+    WIDTH = 500             # å¤§å›¾å®½
+    HEIGHT = 450            # å¤§å›¾é«˜
+    ANCHOR_LEFT_X = 8       # å·¦å›¾Xèµ·ç‚¹
+    ANCHOR_RIGHT_X = 517    # å³å›¾Xèµ·ç‚¹
+    ANCHOR_Y = 190          # Yèµ·ç‚¹
     CLIP_WIDTH = 1
     CLIP_HEIGHT = 1
-    DIFF_LIMIT = 6000       # ²îÒì·§Öµ£¬Á½Æ¬Í¼ÐÎ¶Ô±È²îÒì²îÒì³¬¹ý´ËÖµÊÓÎª²»Ò»Ñù
+    DIFF_LIMIT = 6000       # å·®å¼‚é˜€å€¼ï¼Œä¸¤ç‰‡å›¾å½¢å¯¹æ¯”å·®å¼‚å·®å¼‚è¶…è¿‡æ­¤å€¼è§†ä¸ºä¸ä¸€æ ·
 
-    # ²éÕÒÇøÓò
-    # ´óÍ¼°æ 1024 x 738
-    BIG_WIDTH = 498             # ´óÍ¼¿í
-    BIG_HEIGHT = 448            # ´óÍ¼¸ß
-    BIG_ANCHOR_LEFT_X = 8       # ×óÍ¼XÆðµã
-    BIG_ANCHOR_RIGHT_X = 517    # ÓÒÍ¼XÆðµã
-    BIG_ANCHOR_Y = 190          # YÆðµã
+    # æŸ¥æ‰¾åŒºåŸŸ
+    # å¤§å›¾ç‰ˆ 1024 x 738
+    BIG_WIDTH = 498             # å¤§å›¾å®½
+    BIG_HEIGHT = 448            # å¤§å›¾é«˜
+    BIG_ANCHOR_LEFT_X = 8       # å·¦å›¾Xèµ·ç‚¹
+    BIG_ANCHOR_RIGHT_X = 517    # å³å›¾Xèµ·ç‚¹
+    BIG_ANCHOR_Y = 190          # Yèµ·ç‚¹
     BIG_CLIP_WIDTH = 1
     BIG_CLIP_HEIGHT = 1
-    BIG_DIFF_LIMIT = 6000       # ²îÒì·§Öµ£¬Á½Æ¬Í¼ÐÎ¶Ô±È²îÒì²îÒì³¬¹ý´ËÖµÊÓÎª²»Ò»Ñù
+    BIG_DIFF_LIMIT = 6000       # å·®å¼‚é˜€å€¼ï¼Œä¸¤ç‰‡å›¾å½¢å¯¹æ¯”å·®å¼‚å·®å¼‚è¶…è¿‡æ­¤å€¼è§†ä¸ºä¸ä¸€æ ·
 
-    # Ð¡Í¼°æ 800 x 600
-    SMALL_WIDTH = 381             # ´óÍ¼¿í
-    SMALL_HEIGHT = 286            # ´óÍ¼¸ß
-    SMALL_ANCHOR_LEFT_X = 10      # ×óÍ¼XÆðµã
-    SMALL_ANCHOR_RIGHT_X = 403    # ÓÒÍ¼XÆðµã
-    SMALL_ANCHOR_Y = 184          # YÆðµã
+    # å°å›¾ç‰ˆ 800 x 600
+    SMALL_WIDTH = 381             # å¤§å›¾å®½
+    SMALL_HEIGHT = 286            # å¤§å›¾é«˜
+    SMALL_ANCHOR_LEFT_X = 10      # å·¦å›¾Xèµ·ç‚¹
+    SMALL_ANCHOR_RIGHT_X = 403    # å³å›¾Xèµ·ç‚¹
+    SMALL_ANCHOR_Y = 184          # Yèµ·ç‚¹
     SMALL_CLIP_WIDTH = 1
     SMALL_CLIP_HEIGHT = 1
-    SMALL_DIFF_LIMIT = 7000       # ²îÒì·§Öµ£¬Á½Æ¬Í¼ÐÎ¶Ô±È²îÒì²îÒì³¬¹ý´ËÖµÊÓÎª²»Ò»Ñù
+    SMALL_DIFF_LIMIT = 7000       # å·®å¼‚é˜€å€¼ï¼Œä¸¤ç‰‡å›¾å½¢å¯¹æ¯”å·®å¼‚å·®å¼‚è¶…è¿‡æ­¤å€¼è§†ä¸ºä¸ä¸€æ ·
 
 
-    # ´æ´¢¶Ô±È½á¹û ¶þÎ»Êý×é£¬Ó³ÉäÃ¿Ò»¸ö»ù¿é
+    # å­˜å‚¨å¯¹æ¯”ç»“æžœ äºŒä½æ•°ç»„ï¼Œæ˜ å°„æ¯ä¸€ä¸ªåŸºå—
     result = []
 
     clock = 0
 
     def __init__(self, parent = None):
         QWidget.__init__(self, parent, flags = Qt.FramelessWindowHint | Qt.Window | Qt.WindowStaysOnTopHint)
-        # ÉèÖÃ±³¾°Í¸Ã÷£¬ÕâÑù°´Å¥²»»áÌ«ÄÑ¿´
+        # è®¾ç½®èƒŒæ™¯é€æ˜Žï¼Œè¿™æ ·æŒ‰é’®ä¸ä¼šå¤ªéš¾çœ‹
         self.setAttribute(Qt.WA_TranslucentBackground, True)
 
-        # ÕâÐ©ÊôÐÔÈÃ³ÌÐò²»ÔÚÈÎÎñÀ¸³öÏÖ±êÌâ
+        # è¿™äº›å±žæ€§è®©ç¨‹åºä¸åœ¨ä»»åŠ¡æ å‡ºçŽ°æ ‡é¢˜
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Popup | Qt.Tool);
 
-        # ÍÐÅÌ
+        # æ‰˜ç›˜
         self.icon = QIcon(":\icon.png")
 
         self.trayIcon = QSystemTrayIcon(self)
         self.trayIcon.setIcon(self.icon)
-        self.trayIcon.setToolTip(u"QQÕÒ²çÖúÊÖ")
+        self.trayIcon.setToolTip(u"QQæ‰¾èŒ¬åŠ©æ‰‹")
         self.trayIcon.show()
-        self.trayIcon.showMessage(u"QQÕÒ²çÖúÊÖ", u"QQÕÒ²çÖúÊÖÒÑ¾­´ýÃü£¬½øÈëÓÎÏ·¼´¿É¼¤»î")
+        self.trayIcon.showMessage(u"QQæ‰¾èŒ¬åŠ©æ‰‹", u"QQæ‰¾èŒ¬åŠ©æ‰‹å·²ç»å¾…å‘½ï¼Œè¿›å…¥æ¸¸æˆå³å¯æ¿€æ´»")
 
-        self.action = QAction(u"ÍË³öQQÕÒ²çÖúÊÖ", self, triggered = sys.exit)
+        self.action = QAction(u"é€€å‡ºQQæ‰¾èŒ¬åŠ©æ‰‹", self, triggered = sys.exit)
         self.menu = QMenu(self)
         self.menu.addAction(self.action)
         self.trayIcon.setContextMenu(self.menu)
 
-        # ¶¨Ê±Ì½²âÓÎÏ·
+        # å®šæ—¶æŽ¢æµ‹æ¸¸æˆ
         self.stick_timer = QTimer()
         self.stick_timer.start(20)
         self.connect(self.stick_timer, SIGNAL('timeout()'), self.StickTarget)
 
-        # Õâ¸öQLabelÆäÊµ¾ÍÊÇÖÐ¼ä»æÍ¼ÇøµÄ±³¾°
+        # è¿™ä¸ªQLabelå…¶å®žå°±æ˜¯ä¸­é—´ç»˜å›¾åŒºçš„èƒŒæ™¯
         self.label = QLabel(self)
 
         self.pixmap = QPixmap(self.size())
 
-        # Ë¢ÐÂ°´Å¥
+        # åˆ·æ–°æŒ‰é’®
         self.btn_compare = QPushButton(self)
-        self.btn_compare.setText(u"¶Ô±È")
+        self.btn_compare.setText(u"å¯¹æ¯”")
         self.connect(self.btn_compare, SIGNAL('clicked()'), self.Compare)
 
-        # ¿ª¹Ø
+        # å¼€å…³
         self.btn_toggle = QPushButton(self)
-        self.btn_toggle .setText(u"²Á³ý")
+        self.btn_toggle .setText(u"æ“¦é™¤")
         self.connect(self.btn_toggle , SIGNAL('clicked()'), self.Clear)
 
         self.HideMe()
 
 
     def StickTarget(self):
-        '''ÈÃ±¾´°ÌåÕ³¸½ÔÚÄ¿±ê´°ÌåÉÏ'''
-        # ÕÒµ½Ä¿±ê´°¿Ú¾ä±ú
+        '''è®©æœ¬çª—ä½“ç²˜é™„åœ¨ç›®æ ‡çª—ä½“ä¸Š'''
+        # æ‰¾åˆ°ç›®æ ‡çª—å£å¥æŸ„
         game_hwnd = win32gui.FindWindow(self.GAME_CLASS, self.GAME_TITLE)
         if game_hwnd == 0:
             if self.my_visible:
-                # Èç¹ûÓÎÏ·´°Ìå²»¿É¼û£¬±ÈÈç×îÐ¡»¯¡¢¹Ø±ÕÁË£¬Òþ²Ø×Ô¼º
+                # å¦‚æžœæ¸¸æˆçª—ä½“ä¸å¯è§ï¼Œæ¯”å¦‚æœ€å°åŒ–ã€å…³é—­äº†ï¼Œéšè—è‡ªå·±
                 self.HideMe()
             return
         else:
@@ -142,7 +141,7 @@ class ZhaoChaFrame(QWidget):
                     self.ShowMe()
                     #self.FindAndShow()
             elif win32gui.GetForegroundWindow() != int(self.winId()) and self.my_visible:
-                # ÓÎÏ·´°¿ÚÒþ²ØÊ±£¬Í¬Ê±Òþ²ØÕÒ²êÖúÊÖ
+                # æ¸¸æˆçª—å£éšè—æ—¶ï¼ŒåŒæ—¶éšè—æ‰¾ç¢´åŠ©æ‰‹
                 self.HideMe()
         except:
             if self.my_visible:
@@ -160,25 +159,25 @@ class ZhaoChaFrame(QWidget):
         for row in xrange(len(self.result)):
             for col in xrange(len(self.result[0])):
                 if self.result[row][col] != 0:
-                    # ¶¨Ò»¸ö»ùµã£¬±ÜÃâËãÊýÌ«ÄÑ¿´
+                    # å®šä¸€ä¸ªåŸºç‚¹ï¼Œé¿å…ç®—æ•°å¤ªéš¾çœ‹
                     base_l_x = self.ANCHOR_LEFT_X + self.CLIP_WIDTH * col
                     base_r_x = self.ANCHOR_RIGHT_X + self.CLIP_WIDTH * col
                     base_y = self.ANCHOR_Y + self.CLIP_HEIGHT * row
 
                     if row == 0 or self.result[row - 1][col] == 0:
-                        # Èç¹ûÊÇµÚÒ»ÐÐ£¬»òÕßÉÏÃæµÄ¸ñ×ÓÎª¿Õ£¬»­Ò»ÌõÉÏ±ß
+                        # å¦‚æžœæ˜¯ç¬¬ä¸€è¡Œï¼Œæˆ–è€…ä¸Šé¢çš„æ ¼å­ä¸ºç©ºï¼Œç”»ä¸€æ¡ä¸Šè¾¹
                         p.drawLine(base_l_x, base_y, base_l_x + self.CLIP_WIDTH, base_y)
                         p.drawLine(base_r_x, base_y, base_r_x + self.CLIP_WIDTH, base_y)
                     if row == len(self.result) - 1 or self.result[row + 1][col] == 0:
-                        # Èç¹ûÊÇ×îºóÒ»ÐÐ£¬»òÕßÏÂÃæµÄ¸ñ×ÓÎª¿Õ£¬»­Ò»ÌõÏÂ±ß
+                        # å¦‚æžœæ˜¯æœ€åŽä¸€è¡Œï¼Œæˆ–è€…ä¸‹é¢çš„æ ¼å­ä¸ºç©ºï¼Œç”»ä¸€æ¡ä¸‹è¾¹
                         p.drawLine(base_l_x, base_y + self.CLIP_HEIGHT, base_l_x + self.CLIP_WIDTH, base_y + self.CLIP_HEIGHT)
                         p.drawLine(base_r_x, base_y + self.CLIP_HEIGHT, base_r_x + self.CLIP_WIDTH, base_y + self.CLIP_HEIGHT)
                     if col == 0 or self.result[row][col - 1] == 0:
-                        # Èç¹ûÊÇµÚÒ»ÁÐ£¬»òÕß×ó±ßµÄ¸ñ×ÓÎª¿Õ£¬»­Ò»Ìõ×ó±ß
+                        # å¦‚æžœæ˜¯ç¬¬ä¸€åˆ—ï¼Œæˆ–è€…å·¦è¾¹çš„æ ¼å­ä¸ºç©ºï¼Œç”»ä¸€æ¡å·¦è¾¹
                         p.drawLine(base_l_x, base_y, base_l_x, base_y + self.CLIP_HEIGHT)
                         p.drawLine(base_r_x, base_y, base_r_x, base_y + self.CLIP_HEIGHT)
                     if col == len(self.result[0]) - 1 or self.result[row][col + 1] == 0:
-                        # Èç¹ûÊÇµÚÒ»ÁÐ£¬»òÕßÓÒ±ßµÄ¸ñ×ÓÎª¿Õ£¬»­Ò»ÌõÓÒ±ß
+                        # å¦‚æžœæ˜¯ç¬¬ä¸€åˆ—ï¼Œæˆ–è€…å³è¾¹çš„æ ¼å­ä¸ºç©ºï¼Œç”»ä¸€æ¡å³è¾¹
                         p.drawLine(base_l_x + self.CLIP_WIDTH, base_y, base_l_x + self.CLIP_WIDTH, base_y + self.CLIP_HEIGHT)
                         p.drawLine(base_r_x + self.CLIP_WIDTH, base_y, base_r_x + self.CLIP_WIDTH, base_y + self.CLIP_HEIGHT)
         p.fillRect(self.btn_compare.geometry(), QBrush(QColor(0, 0, 0)))
@@ -202,7 +201,7 @@ class ZhaoChaFrame(QWidget):
 
 
     def Compare(self):
-        # ¶Ô±È
+        # å¯¹æ¯”
         if self.stick_timer.isActive():
             self.FindAndShow()
         else:
@@ -210,7 +209,7 @@ class ZhaoChaFrame(QWidget):
 
 
     def ResetResult(self):
-        # Çå³þÖ®Ç°¼ÆËãµÄ½á¹û
+        # æ¸…æ¥šä¹‹å‰è®¡ç®—çš„ç»“æžœ
         self.result = [[0 for a in range(0, self.WIDTH / self.CLIP_WIDTH)] for b in range(0, self.HEIGHT / self.CLIP_HEIGHT)]
 
 
@@ -240,7 +239,7 @@ class ZhaoChaFrame(QWidget):
                 self.btn_compare.setGeometry(472, 496, 100, 40)
                 self.btn_toggle.setGeometry(576, 496, 100, 40)
         else:
-            print "ÓÎÏ·´°Ìå´óÐ¡Æ¥Åä´íÎó"
+            print ("æ¸¸æˆçª—ä½“å¤§å°åŒ¹é…é”™è¯¯")
             return
 
         self.pixmap = QPixmap(self.size())
@@ -251,27 +250,25 @@ class ZhaoChaFrame(QWidget):
 
 
     def FindAndShow(self):
-        # ½ØÈ¡ÓÎÏ·´°¿ÚÄÚÈÝ
+        # æˆªå–æ¸¸æˆçª—å£å†…å®¹
         self.my_visible = True
         self.DebugTime("init")
 
-        ## ²Ã¼ôµÃµ½×óÓÒµÄÄÚÈÝÍ¼Æ¬
-        win32gui.ShowWindow(self.game_hwnd, win32con.SW_RESTORE)    # Ç¿ÐÐÏÔÊ¾½çÃæºó²ÅºÃ½ØÍ¼
-        win32gui.SetForegroundWindow(self.game_hwnd)                # ½«ÓÎÏ·´°¿ÚÌáµ½×îÇ°
+        ## è£å‰ªå¾—åˆ°å·¦å³çš„å†…å®¹å›¾ç‰‡
+        win32gui.ShowWindow(self.game_hwnd, win32con.SW_RESTORE)    # å¼ºè¡Œæ˜¾ç¤ºç•Œé¢åŽæ‰å¥½æˆªå›¾
+        win32gui.SetForegroundWindow(self.game_hwnd)                # å°†æ¸¸æˆçª—å£æåˆ°æœ€å‰
         src_image = ImageGrab.grab((self.x(), self.y() + self.ANCHOR_Y, self.x() + self.ANCHOR_RIGHT_X + self.WIDTH, self.y() + self.ANCHOR_Y + self.HEIGHT))
-        print "Get the Picture"
+        print ("Get the Picture")
         #src_image.show()
         left_box = (self.ANCHOR_LEFT_X, 0, self.ANCHOR_LEFT_X + self.WIDTH, self.HEIGHT)
         right_box = (self.ANCHOR_RIGHT_X, 0, self.ANCHOR_RIGHT_X + self.WIDTH, self.HEIGHT)
         image_left = src_image.crop(left_box)
         image_right = src_image.crop(right_box)
-        print "show the left"
+        print ("show the left")
         #image_left.show()
-        print "----------------------"
-        print "----------------------"
-        print "show the right"
-        print "----------------------"
-        print "----------------------"
+        print ("----------------------")
+        print ("show the right")
+        print ("----------------------")
         #image_right.show()
         image_cover = ImageChops.invert(image_right)
         image_diff = Image.blend(image_left,image_cover,0.5)
@@ -281,10 +278,10 @@ class ZhaoChaFrame(QWidget):
         #image_diff.show()
         #image_diff.convert('1').show()
         #Image.composite(image_left,image_cover,1).show()
-        self.DebugTime("²ðÍ¼Íê³É")
+        self.DebugTime("æ‹†å›¾å®Œæˆ")
 
  
-        #½«×óÓÒ´óÍ¼²Ã¼ô³É¶à¸öÐ¡Í¼·Ö±ð½øÐÐ¶Ô±È
+        #å°†å·¦å³å¤§å›¾è£å‰ªæˆå¤šä¸ªå°å›¾åˆ†åˆ«è¿›è¡Œå¯¹æ¯”
         self.ResetResult()
         for col in xrange(0, self.WIDTH / self.CLIP_WIDTH):
             for row in xrange(0, self.HEIGHT / self.CLIP_HEIGHT - 1):
@@ -298,20 +295,20 @@ class ZhaoChaFrame(QWidget):
                     self.result[row][col] = 1
 
 
-        self.DebugTime("¶Ô±È")
+        self.DebugTime("å¯¹æ¯”")
         self.repaint()
-        self.DebugTime("»æÖÆ")
+        self.DebugTime("ç»˜åˆ¶")
        # print "----------------------"
-       # for i in range(len(self.result)):        # YÖáÑ­»·
-       #     for j in range(len(self.result[i])):    # XÖáÑ­»·
+       # for i in range(len(self.result)):        # Yè½´å¾ªçŽ¯
+       #     for j in range(len(self.result[i])):    # Xè½´å¾ªçŽ¯
        #         print self.result[i][j],
        #     print
        # print "----------------------"
 
     def compare(self, image_a, image_b):
-        '''·µ»ØÁ½Í¼µÄ²îÒìÖµ
-        ·µ»ØÁ½Í¼ºìÂÌÀ¶²îÖµÍò·Ö±ÈÖ®ºÍ'''
-        print "Start Compare"
+        '''è¿”å›žä¸¤å›¾çš„å·®å¼‚å€¼
+        è¿”å›žä¸¤å›¾çº¢ç»¿è“å·®å€¼ä¸‡åˆ†æ¯”ä¹‹å’Œ'''
+        print ("Start Compare")
         histogram_a = image_a.histogram()
         histogram_b = image_b.histogram()
         if len(histogram_a) != 768 or len(histogram_b) != 768:
@@ -353,7 +350,7 @@ class ZhaoChaFrame(QWidget):
         return
 
         if self.clock > 0:
-            print time.clock() - self.clock, text
+            print (time.clock() - self.clock, text)
         self.clock = time.clock()
 
 

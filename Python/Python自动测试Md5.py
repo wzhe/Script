@@ -1,11 +1,10 @@
 #! /usr/bin/env python
-#coding=gbk
-
+# -*- coding: utf-8 -*-
 import time,re,ctypes
 import os,sys,subprocess,win32gui,win32con,win32api
 import glob,time
 
-#Æô½ø³Ìº¯Êı
+#å¯è¿›ç¨‹å‡½æ•°
 def createProcess(cmd, wait = False):
     if wait:
         proc = tryExcept(subprocess.Popen, cmd, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
@@ -21,7 +20,7 @@ def createProcess(cmd, wait = False):
 def tryExcept(func, *params, **paramMap):
     try:
         return func(*params, **paramMap)
-    except Exception, e:
+    except Exception as e:
         return e
 def isExcept(e, eType = Exception):
     return isinstance(e, eType)
@@ -47,7 +46,7 @@ class BaseWindow:
         return clkCfg
 
 
-#µã»÷´°¿Ú
+#ç‚¹å‡»çª—å£
 #clkCfg:byDrv|mode|(x,y)|(byDrv,mode)|(x,y,byDrv)|(x,y,mode)|(x,y,byDrv,mode)
 def clickWindow(hwnd, clkCfg = None):
     if isRawWindow(hwnd):
@@ -71,7 +70,7 @@ def clickWindow(hwnd, clkCfg = None):
         y += rect[1]
     clickMouse(x, y, byDrv, mode)
 
-#µã»÷Êó±ê
+#ç‚¹å‡»é¼ æ ‡
 CLICK_MOUSE = 0
 CLICK_MOUSE_DOUBLE = 1
 CLICK_MOUSE_RIGHT = 2
@@ -87,20 +86,20 @@ def clickMouse(x, y, byDrv = False, mode = CLICK_MOUSE):
         win32api.mouse_event(downMsg, 0, 0, 0, 0)
         win32api.mouse_event(upMsg, 0, 0, 0, 0)
 
-#ÒÆ¶¯Êó±ê
+#ç§»åŠ¨é¼ æ ‡
 def moveMouse(x, y, byDrv = False):
     w, h = win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
     x, y = int(float(x) / w * 65535), int(float(y) / h * 65535)
     win32api.mouse_event(win32con.MOUSEEVENTF_MOVE | win32con.MOUSEEVENTF_ABSOLUTE, x, y, 0, 0)
 
 
-#»ñµÃ´°¿Ú³ß´ç
+#è·å¾—çª—å£å°ºå¯¸
 def getWindowRect(hwnd):
     rect = tryExcept(win32gui.GetWindowRect, hwnd)
     if not isExcept(rect):
         return rect
 
-#ÖÃ¶¥´°¿Ú
+#ç½®é¡¶çª—å£
 def topWindow(hwnd):
     fgHwnd = win32gui.GetForegroundWindow()
     if fgHwnd == hwnd:
@@ -111,21 +110,21 @@ def topWindow(hwnd):
     return getWindowClass(fgHwnd) == 'Progman' and getWindowText(fgHwnd) == 'Program Manager'
 
 
-##»ñÈ¡´°¿ÚÎÄ×Ö
+##è·å–çª—å£æ–‡å­—
 def getWindowText(hwnd, buf = ctypes.c_buffer(1024)):
     size = ctypes.sizeof(buf)
     ctypes.memset(buf, 0, size)
     tryExcept(win32gui.SendMessageTimeout, hwnd, win32con.WM_GETTEXT, size, buf, win32con.SMTO_ABORTIFHUNG, 10)
     return buf.value.strip()
 
-#»ñÈ¡´°¿ÚÀàÃû
+#è·å–çª—å£ç±»å
 def getWindowClass(hwnd, buf = ctypes.c_buffer(1024)):
     size = ctypes.sizeof(buf)
     ctypes.memset(buf, 0, size)
     ctypes.windll.user32.GetClassNameA(hwnd, ctypes.addressof(buf), size)
     return buf.value.strip()
 
-#²éÕÒµÚÒ»¸ö´°¿Ú
+#æŸ¥æ‰¾ç¬¬ä¸€ä¸ªçª—å£
 #title:text,class,ctrlid
 #parentTitle:None,hwnd,text,class
 def findWindow(title, parentTitle = None, isRaw = False):
@@ -135,11 +134,11 @@ def findWindow(title, parentTitle = None, isRaw = False):
 def findRawWindows(title, parentTitle = None):
     return findWindows(title, parentTitle, True)
 
-#ÅĞ¶ÏÊÇ·ñÎª·ÇÕı³£´°¿Ú
+#åˆ¤æ–­æ˜¯å¦ä¸ºéæ­£å¸¸çª—å£
 def isRawWindow(hwnd):
     return not win32gui.IsWindowVisible(hwnd) or not win32gui.IsWindowEnabled(hwnd) or ctypes.windll.user32.IsHungAppWindow(hwnd)
 
-#²éÕÒ´°¿Ú
+#æŸ¥æ‰¾çª—å£
 #title:text,class,ctrlid
 #parentTitle:None,hwnd,text,class
 def findWindows(title, parentTitle = None, isRaw = False):
@@ -195,12 +194,12 @@ def findWindows(title, parentTitle = None, isRaw = False):
             hwndList.append(hwnd)
     return hwndList
 
-#ÉèÖÃ´°¿ÚÎÄ×Ö
+#è®¾ç½®çª—å£æ–‡å­—
 def setWindowText(hwnd, text):
     rst = tryExcept(win32gui.SendMessageTimeout, hwnd, win32con.WM_SETTEXT, 0, text, win32con.SMTO_ABORTIFHUNG, 10)
     return not isExcept(rst)
 
-#É±µôÖ¸¶¨nameµÄ½ø³Ì
+#æ€æ‰æŒ‡å®šnameçš„è¿›ç¨‹
 def killProcessByName(pname, user = None):
     killProcessByNames([pname], user)
 
@@ -220,7 +219,7 @@ def listFile(path, isDeep=True):
     return _list
 
 
-#É±µôÖ¸¶¨nameµÄ½ø³ÌÁĞ±í
+#æ€æ‰æŒ‡å®šnameçš„è¿›ç¨‹åˆ—è¡¨
 def killProcessByNames(pnameList, user = None):
     cmd = 'taskkill /F /T'
     if user:
@@ -229,7 +228,7 @@ def killProcessByNames(pnameList, user = None):
         cmd += ' /IM %s' % pname
     createProcess(cmd, True)
 
-#³¬Ê±ÉèÖÃ
+#è¶…æ—¶è®¾ç½®
 def handleTimeout(func, timeout, *params, **paramMap):
     interval = 0.8
     if type(timeout) == tuple:
@@ -243,7 +242,7 @@ def handleTimeout(func, timeout, *params, **paramMap):
         timeout -= time.time() - t
     return rst
 
-#Ğ´ÎÄ¼ş
+#å†™æ–‡ä»¶
 def setFileData(filename, data, mode):
     f = open(filename, mode)
     f.write(data)
@@ -261,26 +260,26 @@ if __name__ == '__main__':
     #os.chdir(filedir)
 
     for file in filelist:
-        #Æô½ø³Ì
+        #å¯è¿›ç¨‹
         createProcess('Hash.exe')
-        #²éÕÒä¯ÀÀ°´Å¥
-        browse_button = findWindow(r'ä¯ÀÀ.*?',parentHwnd)
-        #µã»÷ä¯ÀÀ°´Å¥
+        #æŸ¥æ‰¾æµè§ˆæŒ‰é’®
+        browse_button = findWindow(r'æµè§ˆ.*?',parentHwnd)
+        #ç‚¹å‡»æµè§ˆæŒ‰é’®
         clickWindow(browse_button)
         textblack = findWindow(0x47C,'#32770')
         handleTimeout(setWindowText,10,textblack,file)
-        open_hwnd = findWindow('´ò¿ª.*?','#32770')
-        #µã»÷´ò¿ª°´Å¥
+        open_hwnd = findWindow('æ‰“å¼€.*?','#32770')
+        #ç‚¹å‡»æ‰“å¼€æŒ‰é’®
         clickWindow(open_hwnd)
-        #»ñÈ¡ÎÄ¼şmd5ĞÅÏ¢
-        #ĞèÒªÄÚÈİµÄĞĞºÅ
+        #è·å–æ–‡ä»¶md5ä¿¡æ¯
+        #éœ€è¦å†…å®¹çš„è¡Œå·
         expect_content_id = [0,4]
         content_hwnd = findWindow(0x3EA,r'Hash.*?')
         content_text = handleTimeout(getWindowText,20,content_hwnd)
         content = content_text.split('\r\n')
         md5content = [i.split(': ')[1].strip() for ind, i in enumerate(content) if ind in expect_content_id]
-        print md5content
+        print(md5content)
         filename,md5value = md5content
-        setFileData('md5.log','ÎÄ¼şÃû:'+filename+'\n'+'md5:'+ md5value+'\n\n','a')
+        setFileData('md5.log','æ–‡ä»¶å:'+filename+'\n'+'md5:'+ md5value+'\n\n','a')
         killProcessByName('Hash.exe')
     os.system('pause')
