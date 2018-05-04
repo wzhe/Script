@@ -471,12 +471,14 @@ Bigint &Bigint::operator*=(const Bigint &other)
     }
 
     Bigint result;
+    result.number_.reserve(size() + other.size());
     int digit = 0;
     for(auto ismall = smallone->number_.cbegin(); ismall != smallone->number_.cend(); ++ismall, ++digit)
     {
         int carry = 0;
         Bigint temresult;
         temresult.clear();
+        temresult.number_.reserve(size() + other.size());
         for(auto i = 0; i < digit; ++i)
         {
             //std::cout << "push_back 0:" << digit << std::endl;

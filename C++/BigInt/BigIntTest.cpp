@@ -202,10 +202,9 @@ Bigint factorial(int num)
     {
         result *= i;
     }
-
-    std::cout << "num:" << num << " factorial: " <<  result << std::endl;
     end = clock();
-    std::cout << "run time: " << (double)(end - start) / CLOCKS_PER_SEC << " seconds" << std::endl;
+    std::cout << num << "! = " <<  result << std::endl;
+    std::cout << "calculate " << num << "! spent time: " << (double)(end - start) / CLOCKS_PER_SEC << " seconds" << std::endl;
 
     return result;
 }
