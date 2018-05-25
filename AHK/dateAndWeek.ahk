@@ -11,15 +11,17 @@
         gui, font, s30 
         Gui, Add, Text, vMyText cff3300,  w600 XXXXX YYYYY  
         WinSet, TransColor, %CustomColor% 255  
+		WinSet, Bottom,, Disable 
         Gui, -Caption  
-        SetTimer,UpdateOSD,1000  
+        SetTimer,UpdateOSD,3600000
         Gosub,UpdateOSD  
-        Gui, Show, x1060 y800 ;
+        Gui, Show, x1630 y980
       
         UpdateOSD: 
-        time=%A_MM%月%A_DD%日
-        time2=%A_Hour%:%A_Min%:%A_Sec% 
-        GuiControl,,MyText,%time%,%time2%
+        time=%A_MM%月%A_DD%日%A_DDD%
+        ;time2=%A_Hour%:%A_Min%:%A_Sec% 
+        ;GuiControl,,MyText,%time%,time2
+		GuiControl,,MyText,%time%
         
 F10::
 msgbox,4100,退出成功,你已退出时间！,1

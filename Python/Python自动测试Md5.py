@@ -54,11 +54,6 @@ def clickWindow(hwnd, clkCfg = None):
     topWindow(hwnd)
     rect = getWindowRect(hwnd)
     if not rect:
-        return
-    x, y, byDrv, mode = BaseWindow.parseClickConfig(clkCfg)
-    if x == None:
-        x = (rect[0] + rect[2]) / 2
-    elif x < 0:
         x += rect[2]
     else:
         x += rect[0]
